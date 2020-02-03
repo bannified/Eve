@@ -84,3 +84,17 @@ void AEveCharacter::Tick(float DeltaSeconds)
 		}
 	}
 }
+
+void AEveCharacter::OnMoveRight(float inScale)
+{
+
+
+}
+
+void AEveCharacter::OnMoveUp(float inScale)
+{
+}
+
+void AEveCharacter::OnMoveForward(float inScale)
+{
+}

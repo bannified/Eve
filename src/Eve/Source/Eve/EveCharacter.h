@@ -14,6 +14,17 @@ class AEveCharacter : public ACharacter
 public:
 	AEveCharacter();
 
+	/* Movement */
+
+	/* Horizontal movement, along the x-axis */
+	virtual void OnMoveRight(float inScale);
+
+	/* In-and-out movement, along the y-axis */
+	virtual void OnMoveForward(float inScale);
+
+	/* Vertical movement, along the z-axis */
+	virtual void OnMoveUp(float inScale);
+
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 

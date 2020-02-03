@@ -13,6 +13,36 @@ AEvePlayerController::AEvePlayerController()
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
+void AEvePlayerController::OnMoveRight(float inScale)
+{
+	if (m_CharacterBase != nullptr) 
+	{
+		m_CharacterBase->OnMoveRight(inScale);
+	}
+
+	MoveRight.Broadcast(this);
+}
+
+void AEvePlayerController::OnMoveUp(float inScale)
+{
+	if (m_CharacterBase != nullptr)
+	{
+		m_CharacterBase->OnMoveUp(inScale);
+	}
+	
+	MoveUp.Broadcast(this);
+}
+
+void AEvePlayerController::OnMoveForward(float inScale)
+{
+	if (m_CharacterBase != nullptr)
+	{
+		m_CharacterBase->OnMoveForward(inScale);
+	}
+
+	MoveForward.Broadcast(this);
+}
+
 void AEvePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
