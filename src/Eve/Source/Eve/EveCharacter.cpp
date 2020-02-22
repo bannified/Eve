@@ -72,6 +72,16 @@ void AEveCharacter::OnMoveForward(float inScale)
     MoveRightEvent.Broadcast(this);
 }
 
+void AEveCharacter::OnJumpStart()
+{
+    Jump();
+}
+
+void AEveCharacter::OnJumpEnd()
+{
+
+}
+
 void AEveCharacter::OnLookUp(float inScale)
 {
     Super::AddControllerPitchInput(inScale);

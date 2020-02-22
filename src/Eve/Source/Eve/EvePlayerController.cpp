@@ -31,6 +31,20 @@ void AEvePlayerController::OnMoveForwardInput(float inScale)
 	ReceiveMoveForwardInput.Broadcast(this);
 }
 
+void AEvePlayerController::OnJumpStart()
+{
+    if (m_CharacterBase != nullptr) {
+        m_CharacterBase->OnJumpStart();
+    }
+}
+
+void AEvePlayerController::OnJumpEnd()
+{
+    if (m_CharacterBase != nullptr) {
+        m_CharacterBase->OnJumpEnd();
+    }
+}
+
 void AEvePlayerController::OnLookRightInput(float inScale)
 {
     if (m_CharacterBase != nullptr) {
@@ -61,6 +75,8 @@ void AEvePlayerController::SetupInputComponent()
     InputComponent->BindAxis("LookUp", this, &AEvePlayerController::OnLookUpInput);
     InputComponent->BindAxis("LookRight", this, &AEvePlayerController::OnLookRightInput);
 
+    InputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &AEvePlayerController::OnJumpStart);
+    InputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AEvePlayerController::OnJumpEnd);
 }
 
 void AEvePlayerController::OnPossess(APawn* aPawn)

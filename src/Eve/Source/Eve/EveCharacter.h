@@ -29,6 +29,18 @@ public:
 	/* In-and-out movement, along the y-axis */
 	virtual void OnMoveForward(float inScale);
 
+    /**
+     * Start of Jump input
+     */
+    virtual void OnJumpStart();
+
+    /**
+     * End of Jump input
+     */
+    virtual void OnJumpEnd();
+
+    /* End Movement */
+
     UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
     FOnEveCharacterInputDelegate MoveRightEvent;
     UPROPERTY(BlueprintAssignable, Category = "EveCharacter")

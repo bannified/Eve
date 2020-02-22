@@ -29,6 +29,10 @@ protected:
 	virtual void OnMoveRightInput(float inScale);
 	/* In-and-out movement, along the y-axis */
 	virtual void OnMoveForwardInput(float inScale);
+    
+    /* Jump input */
+    virtual void OnJumpStart();
+    virtual void OnJumpEnd();
 
     /* Look Input */
     virtual void OnLookRightInput(float inScale);
