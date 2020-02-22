@@ -29,12 +29,15 @@ AEveCharacter::AEveCharacter()
 	// Create a camera...
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	CameraComponent->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+
+    GroundDetectProjectionDistance = 10.0f;
 }
 
 void AEveCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
+    bIsReachingGround = IsReachingGround(GroundDetectProjectionDistance);
 }
 
 void AEveCharacter::PossessedByPlayerController(AEvePlayerController* playerController)
@@ -80,6 +83,22 @@ void AEveCharacter::OnJumpStart()
 void AEveCharacter::OnJumpEnd()
 {
 
+}
+
+bool AEveCharacter::IsReachingGround(float distance)
+{
+    UCapsuleComponent* body = GetCapsuleComponent();
+    float offsetToBottom = body->GetScaledCapsuleHalfHeight();
+
+    FVector traceStartLocation = GetActorLocation() - FVector(0.0f, 0.0f, offsetToBottom);
+    FVector traceEndLocation = traceStartLocation - FVector(0.0f, 0.0f, distance);
+    
+    FCollisionObjectQueryParams objectQueryParams(ECC_WorldStatic);
+
+    FHitResult hit;
+    bool hitSuccess = GetWorld()->LineTraceSingleByObjectType(hit, traceStartLocation, traceEndLocation, objectQueryParams);
+
+    return hitSuccess;
 }
 
 void AEveCharacter::OnLookUp(float inScale)

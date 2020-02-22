@@ -41,6 +41,10 @@ public:
 
     /* End Movement */
 
+    /* Environment Context */
+
+    virtual bool IsReachingGround(float distance);
+
     UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
     FOnEveCharacterInputDelegate MoveRightEvent;
     UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
@@ -63,5 +67,12 @@ protected:
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm;
+
+    /* Environment Contextual */
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "EveCharacter|Contextual")
+    float GroundDetectProjectionDistance;
+
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "EveCharacter|Contextual")
+    bool bIsReachingGround;
 };
 
