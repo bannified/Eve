@@ -6,6 +6,13 @@
 #include "GameFramework/Character.h"
 #include "EveCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEveCharacterInputDelegate, AEveCharacter*, character);
+
+class AEvePlayerController;
+
+class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS(Blueprintable)
 class AEveCharacter : public ACharacter
 {
@@ -22,30 +29,27 @@ public:
 	/* In-and-out movement, along the y-axis */
 	virtual void OnMoveForward(float inScale);
 
-	/* Vertical movement, along the z-axis */
-	virtual void OnMoveUp(float inScale);
+    UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
+    FOnEveCharacterInputDelegate MoveRightEvent;
+    UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
+    FOnEveCharacterInputDelegate MoveForwardEvent;
+
+    /* Look */
+    virtual void OnLookRight(float inScale);
+    virtual void OnLookUp(float inScale);
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 
-	/** Returns TopDownCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns CursorToWorld subobject **/
-	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
+    virtual void PossessedByPlayerController(AEvePlayerController* playerController);
 
-private:
+protected:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* TopDownCameraComponent;
+	UCameraComponent* CameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
-
-	/** A decal that projects to the cursor location. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UDecalComponent* CursorToWorld;
+	USpringArmComponent* SpringArm;
 };
 

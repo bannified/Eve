@@ -9,49 +9,45 @@
 
 AEvePlayerController::AEvePlayerController()
 {
-	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
-void AEvePlayerController::OnMoveRight(float inScale)
+void AEvePlayerController::OnMoveRightInput(float inScale)
 {
 	if (m_CharacterBase != nullptr) 
 	{
 		m_CharacterBase->OnMoveRight(inScale);
 	}
 
-	MoveRight.Broadcast(this);
+    ReceiveMoveRightInput.Broadcast(this);
 }
 
-void AEvePlayerController::OnMoveUp(float inScale)
-{
-	if (m_CharacterBase != nullptr)
-	{
-		m_CharacterBase->OnMoveUp(inScale);
-	}
-	
-	MoveUp.Broadcast(this);
-}
-
-void AEvePlayerController::OnMoveForward(float inScale)
+void AEvePlayerController::OnMoveForwardInput(float inScale)
 {
 	if (m_CharacterBase != nullptr)
 	{
 		m_CharacterBase->OnMoveForward(inScale);
 	}
 
-	MoveForward.Broadcast(this);
+	ReceiveMoveForwardInput.Broadcast(this);
+}
+
+void AEvePlayerController::OnLookRightInput(float inScale)
+{
+    if (m_CharacterBase != nullptr) {
+        m_CharacterBase->OnLookRight(inScale);
+    }
+}
+
+void AEvePlayerController::OnLookUpInput(float inScale)
+{
+    if (m_CharacterBase != nullptr) {
+        m_CharacterBase->OnLookUp(inScale);
+    }
 }
 
 void AEvePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
-
-	// keep updating the destination every tick while desired
-	if (bMoveToMouseCursor)
-	{
-		MoveToMouseCursor();
-	}
 }
 
 void AEvePlayerController::SetupInputComponent()
@@ -59,46 +55,27 @@ void AEvePlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AEvePlayerController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &AEvePlayerController::OnSetDestinationReleased);
+    InputComponent->BindAxis("MoveForward", this, &AEvePlayerController::OnMoveForwardInput);
+    InputComponent->BindAxis("MoveRight", this, &AEvePlayerController::OnMoveRightInput);
+
+    InputComponent->BindAxis("LookUp", this, &AEvePlayerController::OnLookUpInput);
+    InputComponent->BindAxis("LookRight", this, &AEvePlayerController::OnLookRightInput);
+
 }
 
-void AEvePlayerController::MoveToMouseCursor()
+void AEvePlayerController::OnPossess(APawn* aPawn)
 {
-    // Trace to see what is under the mouse cursor
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+    Super::OnPossess(aPawn);
 
-	if (Hit.bBlockingHit)
-	{
-		// We hit something, move there
-		SetNewMoveDestination(Hit.ImpactPoint);
-	}
+    AEveCharacter* character = Cast<AEveCharacter>(GetPawn());
+    if (character != nullptr)
+    {
+        m_CharacterBase = character;
+        m_CharacterBase->PossessedByPlayerController(this);
+    }
 }
 
-void AEvePlayerController::SetNewMoveDestination(const FVector DestLocation)
+void AEvePlayerController::OnUnPossess()
 {
-	APawn* const MyPawn = GetPawn();
-	if (MyPawn)
-	{
-		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
-
-		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if ((Distance > 120.0f))
-		{
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-		}
-	}
-}
-
-void AEvePlayerController::OnSetDestinationPressed()
-{
-	// set flag to keep updating destination until released
-	bMoveToMouseCursor = true;
-}
-
-void AEvePlayerController::OnSetDestinationReleased()
-{
-	// clear flag to indicate we should stop updating the destination
-	bMoveToMouseCursor = false;
+    Super::OnUnPossess();
 }

@@ -23,40 +23,29 @@ public:
 
 protected:
 
-	/* Movement */
+	/* Movement Input */
 
 	/* Horizontal movement, along the x-axis */
-	virtual void OnMoveRight(float inScale);
-
+	virtual void OnMoveRightInput(float inScale);
 	/* In-and-out movement, along the y-axis */
-	virtual void OnMoveForward(float inScale);
+	virtual void OnMoveForwardInput(float inScale);
 
-	/* Vertical movement, along the z-axis */
-	virtual void OnMoveUp(float inScale);
+    /* Look Input */
+    virtual void OnLookRightInput(float inScale);
+    virtual void OnLookUpInput(float inScale);
 
 	/* Events (for BP) */
-	FOnPlayerControllerInputEvent MoveRight;
-	FOnPlayerControllerInputEvent MoveForward;
-	FOnPlayerControllerInputEvent MoveUp;
+	FOnPlayerControllerInputEvent ReceiveMoveRightInput;
+	FOnPlayerControllerInputEvent ReceiveMoveForwardInput;
 
-
-	/** True if the controlled character should navigate to the mouse cursor. */
-	uint32 bMoveToMouseCursor : 1;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 	// End PlayerController interface
 
-	/** Navigate player to the current mouse cursor location. */
-	void MoveToMouseCursor();
-	
-	/** Navigate player to the given world location. */
-	void SetNewMoveDestination(const FVector DestLocation);
-
-	/** Input handlers for SetDestination action. */
-	void OnSetDestinationPressed();
-	void OnSetDestinationReleased();
+    virtual void OnPossess(APawn* aPawn) override;
+    virtual void OnUnPossess() override;
 };
 
 
