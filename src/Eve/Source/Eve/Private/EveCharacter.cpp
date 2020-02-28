@@ -112,7 +112,7 @@ void AEveCharacter::OnJumpStart()
 
     Jump();
 
-    if (JumpCurrentCount < JumpMaxCount && bFoundClimbTarget) {
+    if (JumpCurrentCount < JumpMaxCount && bFoundClimbTarget && !bIsGrippingEdge) {
         FRotator lookAtTargetDir = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ClimbTargetPoint);
         FRotator resultRot = GetActorRotation();
         resultRot.Yaw = lookAtTargetDir.Yaw;
@@ -146,12 +146,22 @@ void AEveCharacter::StartGrippingLedge(AGrippableLedge* ledgeActor)
     bIsGrippingEdge = true;
     GetCharacterMovement()->SetMovementMode(MOVE_Custom, CUSTOM_MOVEMENT_CLIMB);
 
+    FVector2D ledgePos2D(ledgeActor->GetActorLocation());
     FVector dir = ledgeActor->GetUnitDirectionVectorToPosition(GetActorLocation());
+    FVector perp = dir.RotateAngleAxis(90.0f, { 0.0f, 0.0f, 1.0f });
+    FVector2D perp2D(perp);
     FRotator lookAt = dir.ToOrientationRotator();
+    FVector actorLocation = GetActorLocation();
+    FVector locationDiff = actorLocation - ledgeActor->GetActorLocation();
+    FVector2D diff2D(locationDiff);
+    float dot = FVector2D::DotProduct(perp2D, diff2D);
+
+    FVector2D targetLedgePosition = ledgePos2D + dot * perp2D;
+
     SetActorRotation(lookAt);
-    float x = ledgeActor->GetActorLocation().X - dir.X * LedgeDetectionBoxForwardOffset;
-    float y = ledgeActor->GetActorLocation().Y - dir.Y * LedgeDetectionBoxForwardOffset;
-    float z = ledgeActor->GetActorLocation().Z - LedgeDetectionBox->GetRelativeLocation().Z;
+    float x = targetLedgePosition.X - dir.X * LedgeDetectionBoxForwardOffset;
+    float y = targetLedgePosition.Y - dir.Y * LedgeDetectionBoxForwardOffset;
+    float z = actorLocation.Z + ledgeActor->GetActorLocation().Z - LedgeDetectionBox->GetComponentLocation().Z;
 
     SetActorLocation(FVector(x, y, z));
 }
