@@ -34,6 +34,10 @@ protected:
     virtual void OnJumpStart();
     virtual void OnJumpEnd();
 
+    /* Crouch input */
+    virtual void OnCrouchStart();
+    virtual void OnCrouchEnd();
+
     /* Look Input */
     virtual void OnLookRightInput(float inScale);
     virtual void OnLookUpInput(float inScale);

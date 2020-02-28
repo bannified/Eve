@@ -42,10 +42,10 @@ protected:
 
 public:
     /* Environment Contextual */
-    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "EveCharacter|Contextual")
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "EveCharacter")
     float GroundDetectProjectionDistance;
 
-    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "EveCharacter|Contextual")
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "EveCharacter")
     bool bIsReachingGround;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EveCharacter")
@@ -88,6 +88,10 @@ public:
      */
     virtual void OnJumpEnd();
 
+    /* Crouch Input */
+    virtual void OnCrouchStart();
+    virtual void OnCrouchEnd();
+
     UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
     FOnEveCharacterInputDelegate MoveRightEvent;
     UPROPERTY(BlueprintAssignable, Category = "EveCharacter")
@@ -99,6 +103,11 @@ protected:
     UFUNCTION(BlueprintImplementableEvent, Category = "EveCharacter")
     void BP_OnJumpEnd();
 
+    UFUNCTION(BlueprintImplementableEvent, Category = "EveCharacter")
+    void BP_OnCrouchStart();
+    UFUNCTION(BlueprintImplementableEvent, Category = "EveCharacter")
+    void BP_OnCrouchEnd();
+
     /* Custom movement modes */
 
     UFUNCTION()
@@ -106,6 +115,9 @@ protected:
 
     UFUNCTION(BlueprintCallable, Category = "EveCharacter")
     void StartGrippingLedge(AGrippableLedge* ledgeActor);
+
+    UFUNCTION(BlueprintCallable, Category = "EveCharacter")
+    void ReleaseGrip();
 
     UFUNCTION(BlueprintCallable, Category = "EveCharacter")
     void CheckForClimbTarget();

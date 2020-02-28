@@ -78,45 +78,60 @@ void AEveCharacter::PossessedByPlayerController(AEvePlayerController* playerCont
 
 void AEveCharacter::OnMoveRight(float inScale)
 {
-    FRotator rot = FRotator(0, 0, 0);
+    if (GetCharacterMovement()->CustomMovementMode == CUSTOM_MOVEMENT_CLIMB) {
 
-    UKismetMathLibrary::BreakRotator(GetControlRotation(), rot.Roll, rot.Pitch, rot.Yaw);
-    rot.Roll = 0;
-    rot.Pitch = 0;
+    }
+    else {
+        FRotator rot = FRotator(0, 0, 0);
 
-    FVector resultVector = UKismetMathLibrary::GetRightVector(rot);
+        UKismetMathLibrary::BreakRotator(GetControlRotation(), rot.Roll, rot.Pitch, rot.Yaw);
+        rot.Roll = 0;
+        rot.Pitch = 0;
 
-    AddMovementInput(resultVector, inScale);
+        FVector resultVector = UKismetMathLibrary::GetRightVector(rot);
 
-    MoveRightEvent.Broadcast(this);
+        AddMovementInput(resultVector, inScale);
+
+        MoveRightEvent.Broadcast(this);
+    }
 }
 
 void AEveCharacter::OnMoveForward(float inScale)
 {
-    FRotator rot = FRotator(0, 0, 0);
+    if (GetCharacterMovement()->CustomMovementMode == CUSTOM_MOVEMENT_CLIMB) {
 
-    UKismetMathLibrary::BreakRotator(GetControlRotation(), rot.Roll, rot.Pitch, rot.Yaw);
-    rot.Roll = 0;
-    rot.Pitch = 0;
+    }
+    else {
+        FRotator rot = FRotator(0, 0, 0);
 
-    FVector resultVector = UKismetMathLibrary::GetForwardVector(rot);
+        UKismetMathLibrary::BreakRotator(GetControlRotation(), rot.Roll, rot.Pitch, rot.Yaw);
+        rot.Roll = 0;
+        rot.Pitch = 0;
 
-    AddMovementInput(resultVector, inScale);
+        FVector resultVector = UKismetMathLibrary::GetForwardVector(rot);
 
-    MoveRightEvent.Broadcast(this);
+        AddMovementInput(resultVector, inScale);
+
+        MoveForwardEvent.Broadcast(this);
+    }
 }
 
 void AEveCharacter::OnJumpStart()
 {
     BP_OnJumpStart();
 
-    Jump();
+    if (GetCharacterMovement()->CustomMovementMode == CUSTOM_MOVEMENT_CLIMB) {
+        
+    }
+    else {
+        Jump();
 
-    if (JumpCurrentCount < JumpMaxCount && bFoundClimbTarget && !bIsGrippingEdge) {
-        FRotator lookAtTargetDir = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ClimbTargetPoint);
-        FRotator resultRot = GetActorRotation();
-        resultRot.Yaw = lookAtTargetDir.Yaw;
-        SetActorRotation(resultRot, ETeleportType::TeleportPhysics);
+        if (JumpCurrentCount < JumpMaxCount && bFoundClimbTarget && !bIsGrippingEdge) {
+            FRotator lookAtTargetDir = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ClimbTargetPoint);
+            FRotator resultRot = GetActorRotation();
+            resultRot.Yaw = lookAtTargetDir.Yaw;
+            SetActorRotation(resultRot, ETeleportType::TeleportPhysics);
+        }
     }
 
 }
@@ -124,7 +139,33 @@ void AEveCharacter::OnJumpStart()
 void AEveCharacter::OnJumpEnd()
 {
     BP_OnJumpEnd();
+    if (GetCharacterMovement()->CustomMovementMode == CUSTOM_MOVEMENT_CLIMB) {
 
+    }
+    else {
+
+    }
+}
+
+void AEveCharacter::OnCrouchStart()
+{
+    BP_OnCrouchStart();
+    if (GetCharacterMovement()->CustomMovementMode == CUSTOM_MOVEMENT_CLIMB) {
+        ReleaseGrip();
+    }
+    else {
+
+    }
+}
+
+void AEveCharacter::OnCrouchEnd()
+{
+    BP_OnCrouchEnd();
+    if (GetCharacterMovement()->CustomMovementMode == CUSTOM_MOVEMENT_CLIMB) {
+    }
+    else {
+
+    }
 }
 
 void AEveCharacter::HandleLedgeDetectionBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -164,6 +205,13 @@ void AEveCharacter::StartGrippingLedge(AGrippableLedge* ledgeActor)
     float z = actorLocation.Z + ledgeActor->GetActorLocation().Z - LedgeDetectionBox->GetComponentLocation().Z;
 
     SetActorLocation(FVector(x, y, z));
+}
+
+void AEveCharacter::ReleaseGrip()
+{
+    GetCharacterMovement()->SetMovementMode(MOVE_Falling, 0);
+    GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
+    bIsGrippingEdge = false;
 }
 
 void AEveCharacter::CheckForClimbTarget()

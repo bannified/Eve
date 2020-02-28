@@ -45,6 +45,20 @@ void AEvePlayerController::OnJumpEnd()
     }
 }
 
+void AEvePlayerController::OnCrouchStart()
+{
+    if (m_CharacterBase != nullptr) {
+        m_CharacterBase->OnCrouchStart();
+    }
+}
+
+void AEvePlayerController::OnCrouchEnd()
+{
+    if (m_CharacterBase != nullptr) {
+        m_CharacterBase->OnCrouchEnd();
+    }
+}
+
 void AEvePlayerController::OnLookRightInput(float inScale)
 {
     if (m_CharacterBase != nullptr) {
@@ -72,6 +86,9 @@ void AEvePlayerController::SetupInputComponent()
 
     InputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &AEvePlayerController::OnJumpStart);
     InputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AEvePlayerController::OnJumpEnd);
+
+    InputComponent->BindAction("Crouch", EInputEvent::IE_Pressed, this, &AEvePlayerController::OnCrouchStart);
+    InputComponent->BindAction("Crouch", EInputEvent::IE_Released, this, &AEvePlayerController::OnCrouchEnd);
 }
 
 void AEvePlayerController::OnPossess(APawn* aPawn)
