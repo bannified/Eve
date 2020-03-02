@@ -34,11 +34,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+    /* Climbing Settings */
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     UBoxComponent* LedgeDetectionBox;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     float LedgeDetectionBoxForwardOffset;
+
+    /* Stand/Crouching Settings */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    float StandingCapsuleHalfHeight;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    float StandingMeshVerticalOffset;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    float CrouchingCapsuleHalfHeight;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    float CrouchingMeshVerticalOffset;
 
 public:
     /* Environment Contextual */
@@ -67,6 +80,11 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Climbing")
     float ClimbOffset;
+
+    /* Character movement properties */
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing")
+    bool bIsCrouching;
 
 public: 
 
@@ -136,6 +154,13 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EveCharacter")
     bool bIsGrippingEdge;
+
+    /* Stand/Crouch */
+    UFUNCTION(BlueprintCallable, Category = "EveCharacter")
+    void EnterCrouch();
+    
+    UFUNCTION(BlueprintCallable, Category = "EveCharacter")
+    void ExitCrouch();
 
     /* End Movement */
 
