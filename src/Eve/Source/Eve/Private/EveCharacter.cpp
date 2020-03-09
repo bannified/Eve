@@ -59,6 +59,12 @@ AEveCharacter::AEveCharacter(const FObjectInitializer& ObjectInitializer) :
     LedgeDetectionHeightStart = 30.0f;
     LedgeDetectionHeightEnd = 35.0f;
 
+    StandingCapsuleHalfHeight = 96.0f;
+    StandingMeshVerticalOffset = -88.0f;
+
+    CrouchingCapsuleHalfHeight = 48.0f;
+    CrouchingMeshVerticalOffset = -44.0f;
+
     JumpRange = 200.0f;
 }
 
@@ -154,7 +160,13 @@ void AEveCharacter::OnCrouchStart()
         ReleaseGrip();
     }
     else {
-
+        bIsCrouching = !bIsCrouching;
+        if (bIsCrouching) {
+            EnterCrouch();
+        }
+        else {
+            ExitCrouch();
+        }
     }
 }
 
@@ -228,6 +240,21 @@ void AEveCharacter::CheckForClimbTarget()
     if (bFoundClimbTarget) {
         ClimbTargetPoint = hit.ImpactPoint;
     }
+}
+
+void AEveCharacter::EnterCrouch() 
+{
+    GetCharacterMovement()->Crouch();
+    GetCapsuleComponent()->SetCapsuleHalfHeight(CrouchingCapsuleHalfHeight);
+    GetCapsuleComponent()->AddLocalOffset(FVector(0.0f, 0.0f, -CrouchingCapsuleHalfHeight / 2.0f));
+    GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, CrouchingMeshVerticalOffset));
+}
+
+void AEveCharacter::ExitCrouch()
+{
+    GetCharacterMovement()->UnCrouch();
+    GetCapsuleComponent()->SetCapsuleHalfHeight(StandingCapsuleHalfHeight);
+    GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, StandingMeshVerticalOffset));
 }
 
 bool AEveCharacter::IsReachingGround(float distance)
