@@ -66,6 +66,11 @@ void ASnuggeryPlayerController::OnUnPossess()
     SnuggeryCharacter = nullptr;
 }
 
+void ASnuggeryPlayerController::BeginPlay()
+{
+    bShowMouseCursor = true;
+}
+
 void ASnuggeryPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);

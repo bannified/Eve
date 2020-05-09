@@ -37,6 +37,8 @@ protected:
     virtual void OnUnPossess() override;
 
     /* End PlayerController interface */
+
+    virtual void BeginPlay() override;
 public:
     virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
 
