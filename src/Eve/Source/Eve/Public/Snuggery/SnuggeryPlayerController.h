@@ -17,13 +17,24 @@ class EVE_API ASnuggeryPlayerController : public APlayerController
     GENERATED_BODY()
 
 protected:
+    UPROPERTY(Replicated, VisibleAnywhere, Category = "SnuggeryPlayerController")
     ASnuggeryCharacter* SnuggeryCharacter;
 
 protected:
+
+    /* Camera Control */
+    virtual void OnTurn(float inScale);
+
     /* Movement input */
     virtual void OnMoveRightInput(float inScale);
-
     virtual void OnMoveForwardInput(float inScale);
+
+    /* Look Input */
+    virtual void OnLookRightInput(float inScale);
+    virtual void OnLookUpInput(float inScale);
+
+    virtual void OnCameraPanStart();
+    virtual void OnCameraPanEnd();
 
     virtual void OnJumpStart();
     virtual void OnJumpEnd();
@@ -36,5 +47,9 @@ protected:
     virtual void OnUnPossess() override;
 
     /* End PlayerController interface */
+
+    virtual void BeginPlay() override;
+public:
+    virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
 
 };
