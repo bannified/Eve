@@ -17,6 +17,7 @@ class EVE_API ASnuggeryPlayerController : public APlayerController
     GENERATED_BODY()
 
 protected:
+    UPROPERTY(Replicated, VisibleAnywhere, Category = "SnuggeryPlayerController")
     ASnuggeryCharacter* SnuggeryCharacter;
 
 protected:
@@ -36,5 +37,7 @@ protected:
     virtual void OnUnPossess() override;
 
     /* End PlayerController interface */
+public:
+    virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
 
 };

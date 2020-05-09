@@ -3,6 +3,7 @@
 #include "Snuggery/SnuggeryPlayerController.h"
 #include "Eve/Eve.h"
 #include "Snuggery/SnuggeryCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 void ASnuggeryPlayerController::OnMoveRightInput(float inScale)
 {
@@ -48,7 +49,7 @@ void ASnuggeryPlayerController::OnPossess(APawn* aPawn)
 {
     Super::OnPossess(aPawn);
 
-    SnuggeryCharacter = Cast<ASnuggeryCharacter>(aPawn);
+    SnuggeryCharacter = Cast<ASnuggeryCharacter>(GetPawn());
 
     if (SnuggeryCharacter == nullptr) {
         PRINT_ONSCREEN_WARN("SnuggeryPlayerController %s does not have a valid pawn %s.", *(this->GetName()), *(aPawn->GetName()));
@@ -63,4 +64,11 @@ void ASnuggeryPlayerController::OnUnPossess()
     Super::OnUnPossess();
 
     SnuggeryCharacter = nullptr;
+}
+
+void ASnuggeryPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(ASnuggeryPlayerController, SnuggeryCharacter);
 }
