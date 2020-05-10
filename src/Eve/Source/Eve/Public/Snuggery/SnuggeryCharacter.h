@@ -51,6 +51,19 @@ protected:
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
     void BP_OnMoveForward(float inScale);
 
+    /* Chat Feature */
+protected:
+
+    UFUNCTION(BlueprintCallable, Server, Reliable, Category = "SnuggeryCharacter|Chat")
+    void SendMessage(const FString& message);
+
+public:
+    UFUNCTION(BlueprintCallable, Client, Reliable, Category = "SnuggeryCharacter|Chat")
+    void ReceiveMessage(const FString& sender, const FString& message);
+
+    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter|Chat")
+    void OnMessageReceived(const FString& sender, const FString& message);
+
     /* ACharacter overrides */
 protected:
 	// Called when the game starts or when spawned

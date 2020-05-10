@@ -4,8 +4,11 @@
 #include "Snuggery/SnuggeryCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Snuggery/SnuggeryGameMode.h"
+#include "Snuggery/SnuggeryPlayerState.h"
 
 // Sets default values
 ASnuggeryCharacter::ASnuggeryCharacter()
@@ -72,6 +75,21 @@ void ASnuggeryCharacter::OnJumpEnd()
 void ASnuggeryCharacter::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
 {
 
+}
+
+void ASnuggeryCharacter::SendMessage_Implementation(const FString& message)
+{
+    AGameModeBase* gameMode = UGameplayStatics::GetGameMode(GetWorld());
+    ASnuggeryGameMode* casted = Cast<ASnuggeryGameMode>(gameMode);
+
+    APlayerState* playerState = GetPlayerState();
+    ASnuggeryPlayerState* castedState = Cast<ASnuggeryPlayerState>(playerState);
+    casted->ProcessPlayerMessage(castedState, message);
+}
+
+void ASnuggeryCharacter::ReceiveMessage_Implementation(const FString& sender, const FString& message)
+{
+    OnMessageReceived(sender, message);
 }
 
 // Called when the game starts or when spawned
