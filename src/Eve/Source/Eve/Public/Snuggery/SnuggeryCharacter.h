@@ -38,8 +38,9 @@ public:
     virtual void OnJumpStart();
     virtual void OnJumpEnd();
 
-protected:
+
     /* Blueprint-Implementables */
+protected:
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
     void BP_OnJumpStart();    
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
@@ -53,6 +54,8 @@ protected:
 
     /* Chat Feature */
 protected:
+
+    //void SetChatAvatarImage(const )
 
     UFUNCTION(BlueprintCallable, Server, Reliable, Category = "SnuggeryCharacter|Chat")
     void SendMessage(const FString& message);
