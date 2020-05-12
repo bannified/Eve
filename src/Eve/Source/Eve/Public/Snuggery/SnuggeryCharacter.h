@@ -10,6 +10,7 @@ class ASnuggeryPlayerController;
 
 class UCameraComponent;
 class USpringArmComponent;
+class UWidgetComponent;
 
 UCLASS()
 class EVE_API ASnuggeryCharacter : public ACharacter
@@ -28,6 +29,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
     USpringArmComponent* SpringArmComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter", meta = (AllowPrivateAccess = "true"))
+    UWidgetComponent* NameLabelWidgetComponent;
 
 public:
     /* Movement interface */

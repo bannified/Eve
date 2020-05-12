@@ -9,7 +9,7 @@ public class Eve : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine",
-            "InputCore", "HeadMountedDisplay",
+            "InputCore", "UMG", "GameplayTasks",
             "NavigationSystem", "AIModule" });
 
         //Uncomment if you are using Slate UI

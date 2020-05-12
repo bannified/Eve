@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Snuggery/SnuggeryGameMode.h"
 #include "Snuggery/SnuggeryPlayerState.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 ASnuggeryCharacter::ASnuggeryCharacter()
@@ -40,6 +41,12 @@ ASnuggeryCharacter::ASnuggeryCharacter()
     // Create a camera...
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
     CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+
+    // Name Label Widget Component
+    NameLabelWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("NameLabelWidgetComponent"));
+    NameLabelWidgetComponent->SetupAttachment(RootComponent);
+    NameLabelWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+    NameLabelWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -120.0f));
 }
 
 void ASnuggeryCharacter::OnMoveRight(float inScale)
