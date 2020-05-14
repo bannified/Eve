@@ -11,6 +11,7 @@ class ASnuggeryPlayerController;
 class UCameraComponent;
 class USpringArmComponent;
 class UWidgetComponent;
+class ASnuggeryPlayerState;
 
 UCLASS()
 class EVE_API ASnuggeryCharacter : public ACharacter
@@ -32,6 +33,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter", meta = (AllowPrivateAccess = "true"))
     UWidgetComponent* NameLabelWidgetComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter", meta = (AllowPrivateAccess = "true"))
+    UWidgetComponent* ChatBubbleWidgetComponent;
 
 public:
     /* Movement interface */
@@ -66,10 +70,10 @@ protected:
 
 public:
     UFUNCTION(BlueprintCallable, Client, Reliable, Category = "SnuggeryCharacter|Chat")
-    void ReceiveMessage(const FString& sender, const FString& message);
+    void ReceiveMessage(ASnuggeryPlayerState* sender, const FString& message);
 
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter|Chat")
-    void OnMessageReceived(const FString& sender, const FString& message);
+    void OnMessageReceived(ASnuggeryPlayerState* sender, const FString& message);
 
     /* ACharacter overrides */
 protected:

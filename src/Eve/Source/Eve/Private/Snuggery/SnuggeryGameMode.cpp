@@ -36,7 +36,7 @@ void ASnuggeryGameMode::BroadcastPlayerChatMessage(ASnuggeryPlayerState* senderS
             continue;
         }
 
-        castedCharacter->ReceiveMessage(senderState->GetPlayerName(), message);
+        castedCharacter->ReceiveMessage(senderState, message);
     }
 
 }

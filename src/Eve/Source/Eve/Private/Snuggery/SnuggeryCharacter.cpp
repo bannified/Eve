@@ -47,6 +47,12 @@ ASnuggeryCharacter::ASnuggeryCharacter()
     NameLabelWidgetComponent->SetupAttachment(RootComponent);
     NameLabelWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
     NameLabelWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -120.0f));
+
+    // Chat Bubble Widget Component
+    ChatBubbleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ChatBubbleWidgetComponent"));
+    ChatBubbleWidgetComponent->SetupAttachment(RootComponent);
+    ChatBubbleWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+    ChatBubbleWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 }
 
 void ASnuggeryCharacter::OnMoveRight(float inScale)
@@ -94,7 +100,7 @@ void ASnuggeryCharacter::SendMessage_Implementation(const FString& message)
     casted->ProcessPlayerMessage(castedState, message);
 }
 
-void ASnuggeryCharacter::ReceiveMessage_Implementation(const FString& sender, const FString& message)
+void ASnuggeryCharacter::ReceiveMessage_Implementation(ASnuggeryPlayerState* sender, const FString& message)
 {
     OnMessageReceived(sender, message);
 }
