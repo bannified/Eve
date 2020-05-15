@@ -13,6 +13,7 @@ class USpringArmComponent;
 class UWidgetComponent;
 class ASnuggeryPlayerState;
 class UParticleSystem;
+class USnuggeryCharacterDataAsset;
 
 UCLASS()
 class EVE_API ASnuggeryCharacter : public ACharacter
@@ -58,6 +59,17 @@ public:
     /* Effects */
     UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter|Effect")
     void PlaySpawnEffect();
+
+    /* Character Customization and Switching */
+    UFUNCTION(Server, Reliable, BlueprintCallable, Category = "SnuggeyCharacter|CharacterCustomization")
+    void SwitchCharacter_Server(USnuggeryCharacterDataAsset* characterData);
+
+    UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "SnuggeyCharacter|CharacterCustomization")
+    void SwitchCharacter_Multicast(USnuggeryCharacterDataAsset* characterData);
+
+protected:
+    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
+    void BP_OnSwitchCharacter(USnuggeryCharacterDataAsset* characterData);    
 
     /* Blueprint-Implementables */
 protected:

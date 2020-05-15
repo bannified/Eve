@@ -11,6 +11,7 @@
 #include "Snuggery/SnuggeryPlayerState.h"
 #include "Components/WidgetComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Snuggery/DataAssets/SnuggeryCharacterDataAsset.h"
 
 // Sets default values
 ASnuggeryCharacter::ASnuggeryCharacter()
@@ -96,6 +97,18 @@ void ASnuggeryCharacter::PlaySpawnEffect()
     float heightOffset = GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / 2.0f;
     location.Z -= heightOffset;
     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnParticleSystem, location, FRotator::ZeroRotator, SpawnParticleScale);
+}
+
+void ASnuggeryCharacter::SwitchCharacter_Multicast_Implementation(USnuggeryCharacterDataAsset* characterData)
+{
+    characterData->InitializeCharacter(this);
+    PlaySpawnEffect();
+    BP_OnSwitchCharacter(characterData);
+}
+
+void ASnuggeryCharacter::SwitchCharacter_Server_Implementation(USnuggeryCharacterDataAsset* characterData)
+{
+    SwitchCharacter_Multicast(characterData);
 }
 
 void ASnuggeryCharacter::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
