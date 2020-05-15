@@ -10,6 +10,7 @@
 #include "Snuggery/SnuggeryGameMode.h"
 #include "Snuggery/SnuggeryPlayerState.h"
 #include "Components/WidgetComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ASnuggeryCharacter::ASnuggeryCharacter()
@@ -85,6 +86,18 @@ void ASnuggeryCharacter::OnJumpEnd()
 
 }
 
+void ASnuggeryCharacter::PlaySpawnEffect()
+{
+    if (SpawnParticleSystem == nullptr) 
+    {
+        return;
+    }
+    FVector location = GetActorLocation();
+    float heightOffset = GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / 2.0f;
+    location.Z -= heightOffset;
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnParticleSystem, location, FRotator::ZeroRotator, SpawnParticleScale);
+}
+
 void ASnuggeryCharacter::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
 {
 
@@ -109,7 +122,7 @@ void ASnuggeryCharacter::ReceiveMessage_Implementation(ASnuggeryPlayerState* sen
 void ASnuggeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+    PlaySpawnEffect();
 }
 
 // Called every frame

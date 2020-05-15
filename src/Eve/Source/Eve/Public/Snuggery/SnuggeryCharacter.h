@@ -12,6 +12,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UWidgetComponent;
 class ASnuggeryPlayerState;
+class UParticleSystem;
 
 UCLASS()
 class EVE_API ASnuggeryCharacter : public ACharacter
@@ -31,11 +32,19 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
     USpringArmComponent* SpringArmComponent;
 
+    /* Chat */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter", meta = (AllowPrivateAccess = "true"))
     UWidgetComponent* NameLabelWidgetComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter", meta = (AllowPrivateAccess = "true"))
     UWidgetComponent* ChatBubbleWidgetComponent;
+
+    /* Effects */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SnuggeryCharacter|Effects", meta = (AllowPrivateAccess = "true"))
+    UParticleSystem* SpawnParticleSystem;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SnuggeryCharacter|Effects", meta = (AllowPrivateAccess = "true"))
+    FVector SpawnParticleScale;
 
 public:
     /* Movement interface */
@@ -46,6 +55,9 @@ public:
     virtual void OnJumpStart();
     virtual void OnJumpEnd();
 
+    /* Effects */
+    UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter|Effect")
+    void PlaySpawnEffect();
 
     /* Blueprint-Implementables */
 protected:
