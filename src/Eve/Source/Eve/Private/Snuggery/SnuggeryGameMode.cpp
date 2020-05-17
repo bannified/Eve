@@ -7,6 +7,7 @@
 #include "Snuggery/SnuggeryPlayerState.h"
 #include "Engine/DataTable.h"
 #include "UI/StringToStringRow.h"
+#include "Kismet/DataTableFunctionLibrary.h"
 #include "Eve/Eve.h"
 
 const wchar_t* ASnuggeryGameMode::s_EmojiStringFormat = TEXT(R"(<img id="{0}"/>)");
@@ -37,9 +38,11 @@ void ASnuggeryGameMode::ProcessPlayerMessage(ASnuggeryPlayerState* senderState, 
                 if (emojiStringLength > 2)
                 {
                     FString emojiString = message.Mid(lastDelimiterPosition + 1, emojiStringLength - 1);
-                    if (IsValidEmoji(emojiString))
+                    FStringToStringRow resultRow;
+                    bool found = UDataTableFunctionLibrary::Generic_GetDataTableRowFromName(EmojiDataTable, *emojiString, &resultRow);
+                    if (found)
                     {
-                        transientText = FString::Format(s_EmojiStringFormat, { emojiString });
+                        transientText = FString::Format(s_EmojiStringFormat, { resultRow.RichTextTag });
                         result += transientText;
                     }
                     else
@@ -58,6 +61,12 @@ void ASnuggeryGameMode::ProcessPlayerMessage(ASnuggeryPlayerState* senderState, 
                 result += currentCharacter;
             }
         }
+    }
+
+    if (bIsInEmoji)
+    {
+        int emojiStringLength = messageLength - lastDelimiterPosition - 1;
+        result.Append(message.Mid(lastDelimiterPosition, emojiStringLength + 1));
     }
 
     BroadcastPlayerChatMessage(senderState, result);
