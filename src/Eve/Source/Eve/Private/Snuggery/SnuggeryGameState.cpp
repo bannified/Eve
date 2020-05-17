@@ -3,3 +3,7 @@
 
 #include "Snuggery/SnuggeryGameState.h"
 
+void ASnuggeryGameState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}

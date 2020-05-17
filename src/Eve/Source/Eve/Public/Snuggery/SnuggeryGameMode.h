@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "EveCore/EveGameModeBase.h"
 #include "SnuggeryGameMode.generated.h"
 
 class ASnuggeryPlayerState;
@@ -13,7 +14,7 @@ class UDataTable;
  * 
  */
 UCLASS()
-class EVE_API ASnuggeryGameMode : public AGameModeBase
+class EVE_API ASnuggeryGameMode : public AEveGameModeBase
 {
 	GENERATED_BODY()
 

@@ -14,4 +14,7 @@ class EVE_API ASnuggeryGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 	
+public:
+    virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
+
 };
