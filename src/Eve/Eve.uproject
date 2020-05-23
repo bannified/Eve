@@ -4,16 +4,16 @@
 	"Category": "",
 	"Description": "",
 	"Modules": [
-		{
-			"Name": "Eve",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine",
-				"AIModule",
-				"UMG"
-			]
-		}
+    {
+      "Name": "Eve",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "AdditionalDependencies": [
+        "Engine",
+        "AIModule",
+        "UMG"
+      ]
+    }
 	],
 	"Plugins": [
 		{

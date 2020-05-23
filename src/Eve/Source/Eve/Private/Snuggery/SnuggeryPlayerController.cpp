@@ -5,6 +5,14 @@
 #include "Snuggery/SnuggeryCharacter.h"
 #include "Net/UnrealNetwork.h"
 
+void ASnuggeryPlayerController::OnTurn(float inScale)
+{
+    if (SnuggeryCharacter != nullptr)
+    {
+        //SnuggeryCharacter->
+    }
+}
+
 void ASnuggeryPlayerController::OnMoveRightInput(float inScale)
 {
     if (SnuggeryCharacter != nullptr) {
@@ -16,6 +24,38 @@ void ASnuggeryPlayerController::OnMoveForwardInput(float inScale)
 {
     if (SnuggeryCharacter != nullptr) {
         SnuggeryCharacter->OnMoveForward(inScale);
+    }
+}
+
+void ASnuggeryPlayerController::OnLookRightInput(float inScale)
+{
+    if (SnuggeryCharacter != nullptr)
+    {
+        SnuggeryCharacter->OnLookRight(inScale);
+    }
+}
+
+void ASnuggeryPlayerController::OnLookUpInput(float inScale)
+{
+    if (SnuggeryCharacter != nullptr)
+    {
+        SnuggeryCharacter->OnLookUp(inScale);
+    }
+}
+
+void ASnuggeryPlayerController::OnCameraPanStart()
+{
+    if (SnuggeryCharacter != nullptr)
+    {
+        SnuggeryCharacter->OnCameraPanStart();
+    }
+}
+
+void ASnuggeryPlayerController::OnCameraPanEnd()
+{
+    if (SnuggeryCharacter != nullptr)
+    {
+        SnuggeryCharacter->OnCameraPanEnd();
     }
 }
 
@@ -40,8 +80,14 @@ void ASnuggeryPlayerController::SetupInputComponent()
     InputComponent->BindAxis("MoveForward", this, &ASnuggeryPlayerController::OnMoveForwardInput);
     InputComponent->BindAxis("MoveRight", this, &ASnuggeryPlayerController::OnMoveRightInput);
 
+    InputComponent->BindAxis("LookUp", this, &ASnuggeryPlayerController::OnLookUpInput);
+    InputComponent->BindAxis("LookRight", this, &ASnuggeryPlayerController::OnLookRightInput);
+
     InputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ASnuggeryPlayerController::OnJumpStart);
     InputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &ASnuggeryPlayerController::OnJumpEnd);
+
+    InputComponent->BindAction("CameraPan", EInputEvent::IE_Pressed, this, &ASnuggeryPlayerController::OnCameraPanStart);
+    InputComponent->BindAction("CameraPan", EInputEvent::IE_Released, this, &ASnuggeryPlayerController::OnCameraPanEnd);
 
 }
 

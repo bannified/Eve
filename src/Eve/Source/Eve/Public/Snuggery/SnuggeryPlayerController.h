@@ -21,10 +21,20 @@ protected:
     ASnuggeryCharacter* SnuggeryCharacter;
 
 protected:
+
+    /* Camera Control */
+    virtual void OnTurn(float inScale);
+
     /* Movement input */
     virtual void OnMoveRightInput(float inScale);
-
     virtual void OnMoveForwardInput(float inScale);
+
+    /* Look Input */
+    virtual void OnLookRightInput(float inScale);
+    virtual void OnLookUpInput(float inScale);
+
+    virtual void OnCameraPanStart();
+    virtual void OnCameraPanEnd();
 
     virtual void OnJumpStart();
     virtual void OnJumpEnd();

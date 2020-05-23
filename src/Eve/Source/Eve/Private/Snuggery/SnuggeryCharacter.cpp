@@ -12,6 +12,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Snuggery/DataAssets/SnuggeryCharacterDataAsset.h"
+#include "Eve/Eve.h"
 
 // Sets default values
 ASnuggeryCharacter::ASnuggeryCharacter()
@@ -55,6 +56,14 @@ ASnuggeryCharacter::ASnuggeryCharacter()
     ChatBubbleWidgetComponent->SetupAttachment(RootComponent);
     ChatBubbleWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
     ChatBubbleWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+
+    bCameraPanEnabled = false;
+
+    CameraHorizontalPanSpeed = 1.0f;
+    CameraVerticalPanSpeed = 1.0f;
+
+    CameraMode = ESnuggeryCharacterCameraMode::PlayerPivot;
+    SetupCameraMode(CameraMode);
 }
 
 void ASnuggeryCharacter::OnMoveRight(float inScale)
@@ -87,6 +96,115 @@ void ASnuggeryCharacter::OnJumpEnd()
 
 }
 
+void ASnuggeryCharacter::OnLookRight(float inScale)
+{
+    // Todo: Refactor into CameraController
+    switch (CameraMode)
+    {
+        case ESnuggeryCharacterCameraMode::PlayerPivot:
+            if (bIsPlayerPanning)
+            {
+                Super::AddControllerYawInput(inScale);
+            }
+            break;
+        case ESnuggeryCharacterCameraMode::Platformer:
+            break;
+        case ESnuggeryCharacterCameraMode::ThirdPerson:
+            Super::AddControllerYawInput(inScale);
+            break;
+    }
+}
+
+void ASnuggeryCharacter::OnLookUp(float inScale)
+{
+    // Todo: Refactor into CameraController
+    switch (CameraMode)
+    {
+    case ESnuggeryCharacterCameraMode::PlayerPivot:
+        if (bIsPlayerPanning)
+        {
+            Super::AddControllerPitchInput(inScale);
+        }
+        break;
+    case ESnuggeryCharacterCameraMode::Platformer:
+        break;
+    case ESnuggeryCharacterCameraMode::ThirdPerson:
+        Super::AddControllerPitchInput(inScale);
+        break;
+    }
+    Super::AddControllerPitchInput(inScale);
+}
+
+void ASnuggeryCharacter::OnCameraPanStart()
+{
+    bIsPlayerPanning = true;
+}
+
+void ASnuggeryCharacter::OnCameraPanEnd()
+{
+    bIsPlayerPanning = false;
+}
+
+void ASnuggeryCharacter::SetupCameraMode(TEnumAsByte<ESnuggeryCharacterCameraMode> mode)
+{
+    switch (mode)
+    {
+    case ESnuggeryCharacterCameraMode::PlayerPivot:
+        bUseControllerRotationPitch = false;
+        bUseControllerRotationYaw = false;
+        bUseControllerRotationRoll = false;
+
+        SpringArmComponent->bUsePawnControlRotation = true;
+        SpringArmComponent->bInheritPitch = true;
+        SpringArmComponent->bInheritYaw = true;
+        SpringArmComponent->bInheritRoll = true;
+        SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 70.0f));
+        SpringArmComponent->SetRelativeRotation(FRotator(-25.0f, -0.0f, 0.0f));
+
+        CameraComponent->bUsePawnControlRotation = false;
+        CameraComponent->SetRelativeRotation(FRotator::ZeroRotator);
+
+        bCameraPanEnabled = true;
+        break;
+    case ESnuggeryCharacterCameraMode::Platformer:
+        bUseControllerRotationPitch = false;
+        bUseControllerRotationYaw = false;
+        bUseControllerRotationRoll = false;
+
+        SpringArmComponent->bUsePawnControlRotation = true;
+        SpringArmComponent->bInheritPitch = false;
+        SpringArmComponent->bInheritYaw = false;
+        SpringArmComponent->bInheritRoll = false;
+        SpringArmComponent->SetRelativeLocation(FVector(0.0f, -0.0f, 50.0f));
+        SpringArmComponent->SetRelativeRotation(FRotator(-25.0f, 180.0f, 0.0f));
+
+        CameraComponent->bUsePawnControlRotation = false;
+        CameraComponent->SetRelativeRotation(FRotator::ZeroRotator);
+
+        bCameraPanEnabled = false;
+        break;
+    case ESnuggeryCharacterCameraMode::ThirdPerson:
+        bUseControllerRotationPitch = false;
+        bUseControllerRotationYaw = false;
+        bUseControllerRotationRoll = false;
+
+        SpringArmComponent->bUsePawnControlRotation = true;
+        SpringArmComponent->bInheritPitch = true;
+        SpringArmComponent->bInheritYaw = true;
+        SpringArmComponent->bInheritRoll = true;
+        SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 70.0f));
+        SpringArmComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 00.0f));
+
+        CameraComponent->bUsePawnControlRotation = false;
+        CameraComponent->SetRelativeRotation(FRotator::ZeroRotator);
+
+        bCameraPanEnabled = false;
+        break;
+    default:
+        break;
+    }
+}
+
 void ASnuggeryCharacter::PlaySpawnEffect()
 {
     if (SpawnParticleSystem == nullptr) 
@@ -114,6 +232,21 @@ void ASnuggeryCharacter::SwitchCharacter_Server_Implementation(USnuggeryCharacte
 void ASnuggeryCharacter::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
 {
 
+}
+
+void ASnuggeryCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+
+    static FName Name_CameraMode = GET_MEMBER_NAME_CHECKED(ASnuggeryCharacter, CameraMode);
+
+    UProperty* PropertyThatChanged = PropertyChangedEvent.Property;
+    const FName PropertyName = PropertyThatChanged != nullptr ? PropertyThatChanged->GetFName() : NAME_None;
+
+    if (PropertyName == Name_CameraMode)
+    {
+        SetupCameraMode(CameraMode);
+    }
 }
 
 void ASnuggeryCharacter::SendMessage_Implementation(const FString& message)
