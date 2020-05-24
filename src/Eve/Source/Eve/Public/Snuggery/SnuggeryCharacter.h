@@ -7,13 +7,14 @@
 #include "SnuggeryCharacter.generated.h"
 
 class ASnuggeryPlayerController;
+class ASnuggeryPetCharacter;
+class USnuggeryCharacterDataAsset;
+class ASnuggeryPlayerState;
 
 class UCameraComponent;
 class USpringArmComponent;
 class UWidgetComponent;
-class ASnuggeryPlayerState;
 class UParticleSystem;
-class USnuggeryCharacterDataAsset;
 
 UENUM(BlueprintType, Category = "SnuggeryCharacter")
 enum ESnuggeryCharacterCameraMode {
@@ -49,6 +50,13 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SnuggeryCharacter|Camera", meta = (AllowPrivateAccess = "true"))
     float CameraVerticalPanSpeed;
+
+    /* Pets */
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SnuggeryCharacter|Pets", meta = (AllowPrivateAccess = "true"))
+    ASnuggeryPetCharacter* CurrentPet;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SnuggeryCharacter|Pets", meta = (AllowPrivateAccess = "true"))
+    TSubclassOf<ASnuggeryPetCharacter> StarterPetClass;
 
 public:
     /* Movement interface */

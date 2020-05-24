@@ -2,13 +2,55 @@
 
 
 #include "Snuggery/SnuggeryCharacterBase.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Snuggery/DataAssets/SnuggeryCharacterDataAsset.h"
 
 // Sets default values
 ASnuggeryCharacterBase::ASnuggeryCharacterBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
+    SetReplicates(true);
+    SetReplicateMovement(true);
+
+    bUseControllerRotationYaw = false;
+
+    // Configure character movement
+    GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
+    GetCharacterMovement()->RotationRate = FRotator(0.f, 360.f, 0.f);
+
+    // Create a camera boom...
+    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+    SpringArmComponent->SetupAttachment(RootComponent);
+    SpringArmComponent->TargetArmLength = 500.0f;
+
+    SpringArmComponent->ProbeChannel = ECC_Visibility;
+    SpringArmComponent->bDoCollisionTest = true;
+
+    SpringArmComponent->bInheritPitch = false;
+    SpringArmComponent->bInheritYaw = false;
+    SpringArmComponent->bInheritRoll = false;
+
+    // Create a camera...
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
+    CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+
+    // Name Label Widget Component
+    NameLabelWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("NameLabelWidgetComponent"));
+    NameLabelWidgetComponent->SetupAttachment(RootComponent);
+    NameLabelWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+    NameLabelWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -120.0f));
+
+    // Chat Bubble Widget Component
+    ChatBubbleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ChatBubbleWidgetComponent"));
+    ChatBubbleWidgetComponent->SetupAttachment(RootComponent);
+    ChatBubbleWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+    ChatBubbleWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 }
 
 void ASnuggeryCharacterBase::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
@@ -70,6 +112,8 @@ void ASnuggeryCharacterBase::PlaySpawnEffect()
 
 void ASnuggeryCharacterBase::SwitchCharacter_Multicast_Implementation(USnuggeryCharacterDataAsset* characterData)
 {
+    characterData->InitializeCharacter(this);
+    PlaySpawnEffect();
     BP_OnSwitchCharacter(characterData);
 }
 
