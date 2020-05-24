@@ -7,7 +7,7 @@
 #include "Styling/SlateBrush.h"
 #include "SnuggeryCharacterDataAsset.generated.h"
 
-class ASnuggeryCharacter;
+class ASnuggeryCharacterBase;
 class USkeletalMesh;
 class UAnimBlueprint;
 
@@ -37,10 +37,10 @@ protected:
 
 public:
     UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter")
-    virtual void InitializeCharacter(ASnuggeryCharacter* character);
+    virtual void InitializeCharacter(ASnuggeryCharacterBase* character);
 
 protected:
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
-    void K2_InitializeCharacter(ASnuggeryCharacter* character);
+    void K2_InitializeCharacter(ASnuggeryCharacterBase* character);
 
 };

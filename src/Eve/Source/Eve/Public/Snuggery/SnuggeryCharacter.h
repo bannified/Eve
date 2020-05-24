@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Snuggery/SnuggeryCharacterBase.h"
 #include "SnuggeryCharacter.generated.h"
 
 class ASnuggeryPlayerController;
@@ -23,7 +23,7 @@ enum ESnuggeryCharacterCameraMode {
 };
 
 UCLASS()
-class EVE_API ASnuggeryCharacter : public ACharacter
+class EVE_API ASnuggeryCharacter : public ASnuggeryCharacterBase
 {
 	GENERATED_BODY()
 
@@ -31,31 +31,9 @@ public:
 	// Sets default values for this character's properties
 	ASnuggeryCharacter();
 
-    virtual void OnPossessedByPlayerController(ASnuggeryPlayerController* playerController);
-
     virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 
 protected:
-    /* Chat */
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter|Chat", meta = (AllowPrivateAccess = "true"))
-    UWidgetComponent* NameLabelWidgetComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter|Chat", meta = (AllowPrivateAccess = "true"))
-    UWidgetComponent* ChatBubbleWidgetComponent;
-
-    /* Effects */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SnuggeryCharacter|Effects", meta = (AllowPrivateAccess = "true"))
-    UParticleSystem* SpawnParticleSystem;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SnuggeryCharacter|Effects", meta = (AllowPrivateAccess = "true"))
-    FVector SpawnParticleScale;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter|Camera", meta = (AllowPrivateAccess = "true"))
-    UCameraComponent* CameraComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SnuggeryCharacter|Camera", meta = (AllowPrivateAccess = "true"))
-    USpringArmComponent* SpringArmComponent;
-
     /* Camera */
     UPROPERTY(EditAnywhere, Category = "SnuggeryCharacter|Camera")
     TEnumAsByte<ESnuggeryCharacterCameraMode> CameraMode;
@@ -74,57 +52,31 @@ protected:
 
 public:
     /* Movement interface */
-    virtual void OnMoveRight(float inScale);
+    virtual void OnMoveRight(float inScale) override;
 
-    virtual void OnMoveForward(float inScale);
+    virtual void OnMoveForward(float inScale) override;
 
-    virtual void OnJumpStart();
-    virtual void OnJumpEnd();
+    virtual void OnJumpStart() override;
+    virtual void OnJumpEnd() override;
 
     /* Look */
-    virtual void OnLookRight(float inScale);
-    virtual void OnLookUp(float inScale);
+    virtual void OnLookRight(float inScale) override;
+    virtual void OnLookUp(float inScale) override;
 
     /* Camera Pan */
-    virtual void OnCameraPanStart();
-    virtual void OnCameraPanEnd();
+    virtual void OnCameraPanStart() override;
+    virtual void OnCameraPanEnd() override;
 
     /* Camera */
     UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter|Camera")
     void SetupCameraMode(TEnumAsByte<ESnuggeryCharacterCameraMode> mode);
 
-    /* Effects */
-    UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter|Effect")
-    void PlaySpawnEffect();
-
-    /* Character Customization and Switching */
-    UFUNCTION(Server, Reliable, BlueprintCallable, Category = "SnuggeryCharacter|CharacterCustomization")
-    void SwitchCharacter_Server(USnuggeryCharacterDataAsset* characterData);
-
-    UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "SnuggeryCharacter|CharacterCustomization")
-    void SwitchCharacter_Multicast(USnuggeryCharacterDataAsset* characterData);
-
-protected:
-    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
-    void BP_OnSwitchCharacter(USnuggeryCharacterDataAsset* characterData);    
-
-    /* Blueprint-Implementables */
-protected:
-    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
-    void BP_OnJumpStart();    
-    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
-    void BP_OnJumpEnd();
-
-    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
-    void BP_OnMoveRight(float inScale);
-
-    UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
-    void BP_OnMoveForward(float inScale);
-
     /* Chat Feature */
 protected:
 
     //void SetChatAvatarImage(const )
+
+    virtual void PlaySpawnEffect() override;
 
     UFUNCTION(BlueprintCallable, Server, Reliable, Category = "SnuggeryCharacter|Chat")
     void SendMessage(const FString& message);
@@ -135,6 +87,11 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter|Chat")
     void OnMessageReceived(ASnuggeryPlayerState* sender, const FString& message);
+
+    /* Character Customization and Switching */
+    virtual void SwitchCharacter_Server(USnuggeryCharacterDataAsset* characterData) override;
+
+    virtual void SwitchCharacter_Multicast(USnuggeryCharacterDataAsset* characterData) override;
 
     /* ACharacter overrides */
 protected:

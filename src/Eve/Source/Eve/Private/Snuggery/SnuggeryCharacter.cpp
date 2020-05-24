@@ -217,21 +217,9 @@ void ASnuggeryCharacter::PlaySpawnEffect()
     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnParticleSystem, location, FRotator::ZeroRotator, SpawnParticleScale);
 }
 
-void ASnuggeryCharacter::SwitchCharacter_Multicast_Implementation(USnuggeryCharacterDataAsset* characterData)
+void ASnuggeryCharacter::SwitchCharacter_Server(USnuggeryCharacterDataAsset* characterData)
 {
-    characterData->InitializeCharacter(this);
-    PlaySpawnEffect();
-    BP_OnSwitchCharacter(characterData);
-}
-
-void ASnuggeryCharacter::SwitchCharacter_Server_Implementation(USnuggeryCharacterDataAsset* characterData)
-{
-    SwitchCharacter_Multicast(characterData);
-}
-
-void ASnuggeryCharacter::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
-{
-
+    Super::SwitchCharacter_Server(characterData);
 }
 
 void ASnuggeryCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
@@ -262,6 +250,13 @@ void ASnuggeryCharacter::SendMessage_Implementation(const FString& message)
 void ASnuggeryCharacter::ReceiveMessage_Implementation(ASnuggeryPlayerState* sender, const FString& message)
 {
     OnMessageReceived(sender, message);
+}
+
+void ASnuggeryCharacter::SwitchCharacter_Multicast(USnuggeryCharacterDataAsset* characterData)
+{
+    characterData->InitializeCharacter(this);
+    PlaySpawnEffect();
+    BP_OnSwitchCharacter(characterData);
 }
 
 // Called when the game starts or when spawned

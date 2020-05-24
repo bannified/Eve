@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "SnuggeryPlayerController.generated.h"
 
-class ASnuggeryCharacter;
+class ASnuggeryCharacterBase;
 
 /**
  *
@@ -18,7 +18,7 @@ class EVE_API ASnuggeryPlayerController : public APlayerController
 
 protected:
     UPROPERTY(Replicated, VisibleAnywhere, Category = "SnuggeryPlayerController")
-    ASnuggeryCharacter* SnuggeryCharacter;
+    ASnuggeryCharacterBase* SnuggeryCharacter;
 
 protected:
 

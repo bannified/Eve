@@ -2,11 +2,11 @@
 
 
 #include "Snuggery/DataAssets/SnuggeryCharacterDataAsset.h"
-#include "Snuggery/SnuggeryCharacter.h"
+#include "Snuggery/SnuggeryCharacterBase.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimBlueprint.h"
 
-void USnuggeryCharacterDataAsset::InitializeCharacter(ASnuggeryCharacter* character)
+void USnuggeryCharacterDataAsset::InitializeCharacter(ASnuggeryCharacterBase* character)
 {
     character->GetMesh()->SetSkeletalMesh(SkeletalMesh);
     character->GetMesh()->SetAnimInstanceClass(AnimationBlueprint->GeneratedClass);

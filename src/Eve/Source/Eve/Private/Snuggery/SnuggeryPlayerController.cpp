@@ -2,7 +2,7 @@
 
 #include "Snuggery/SnuggeryPlayerController.h"
 #include "Eve/Eve.h"
-#include "Snuggery/SnuggeryCharacter.h"
+#include "Snuggery/SnuggeryCharacterBase.h"
 #include "Net/UnrealNetwork.h"
 
 void ASnuggeryPlayerController::OnTurn(float inScale)
@@ -95,7 +95,7 @@ void ASnuggeryPlayerController::OnPossess(APawn* aPawn)
 {
     Super::OnPossess(aPawn);
 
-    SnuggeryCharacter = Cast<ASnuggeryCharacter>(GetPawn());
+    SnuggeryCharacter = Cast<ASnuggeryCharacterBase>(GetPawn());
 
     if (SnuggeryCharacter == nullptr) {
         PRINT_ONSCREEN_WARN("SnuggeryPlayerController %s does not have a valid pawn %s.", *(this->GetName()), *(aPawn->GetName()));
