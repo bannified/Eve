@@ -224,14 +224,17 @@ void ASnuggeryCharacter::BeginPlay()
 	Super::BeginPlay();
     PlaySpawnEffect();
 
-    if (StarterPetClass != nullptr)
+    if (Role == ENetRole::ROLE_Authority)
     {
-        FActorSpawnParameters parameters;
-        parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+        if (StarterPetClass != nullptr)
+        {
+            FActorSpawnParameters parameters;
+            parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-        ASnuggeryPetCharacter* pet = GetWorld()->SpawnActor<ASnuggeryPetCharacter>(StarterPetClass, GetActorLocation(), FRotator::ZeroRotator, parameters);
-        CurrentPet = pet;
-        CurrentPet->SetPetOwner_Server(this);
+            ASnuggeryPetCharacter* pet = GetWorld()->SpawnActor<ASnuggeryPetCharacter>(StarterPetClass, GetActorLocation(), FRotator::ZeroRotator, parameters);
+            CurrentPet = pet;
+            CurrentPet->SetPetOwner_Server(this);
+        }
     }
 }
 
