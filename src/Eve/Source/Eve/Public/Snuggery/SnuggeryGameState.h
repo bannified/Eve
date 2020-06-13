@@ -6,6 +6,8 @@
 #include "GameFramework/GameStateBase.h"
 #include "SnuggeryGameState.generated.h"
 
+class USnuggeryCharacterDataAsset;
+
 /**
  * 
  */
@@ -17,4 +19,9 @@ class EVE_API ASnuggeryGameState : public AGameStateBase
 public:
     virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
 
+    ASnuggeryGameState();
+
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SnuggeryGameState")
+    TArray<USnuggeryCharacterDataAsset*> CharacterDataList;
 };

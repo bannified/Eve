@@ -39,6 +39,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter")
     virtual void InitializeCharacter(ASnuggeryCharacterBase* character);
 
+    UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter")
+    bool IsValid();
+
 protected:
     UFUNCTION(BlueprintImplementableEvent, Category = "SnuggeryCharacter")
     void K2_InitializeCharacter(ASnuggeryCharacterBase* character);

@@ -14,4 +14,5 @@ class EVE_API ASnuggeryPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 	
+    void OnNameChange_Multicast();
 };

@@ -46,6 +46,10 @@ public:
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "MemGameModeBase|Gameflow")
     void BP_OnStateChanged(AGameModeState* oldState, AGameModeState* newState);
     
+    virtual void PostLogin(APlayerController* NewPlayer) override;
+
+    virtual void ChangeName(AController* Controller, const FString& NewName, bool bNameChange) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -58,6 +62,14 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "MemGameModeBase|Player Management")
 	virtual void RegisterPlayer(APlayerController* playerController);
+
+    UFUNCTION(BlueprintCallable, Category = "MemGameModeBase|Constants")
+    const FString GetPlayerNameFormat() const { return s_DefaultPlayerNameFormatString; };
+
+    static inline const TCHAR* const GetDefaultPlayerNameFormat() { return s_DefaultPlayerNameFormat; };
+
+    static const FString s_DefaultPlayerNameFormatString;
+    static const TCHAR* s_DefaultPlayerNameFormat;
 };
 
 

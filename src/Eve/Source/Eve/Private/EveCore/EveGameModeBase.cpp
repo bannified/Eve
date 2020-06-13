@@ -5,6 +5,9 @@
 #include "EvePlayerController.h"
 #include "EveCharacter.h"
 
+const TCHAR* AEveGameModeBase::s_DefaultPlayerNameFormat = TEXT(R"(Player_{0})");
+const FString AEveGameModeBase::s_DefaultPlayerNameFormatString = FString(AEveGameModeBase::s_DefaultPlayerNameFormat);
+
 AEveGameModeBase::AEveGameModeBase()
 {
 
@@ -39,6 +42,27 @@ void AEveGameModeBase::WinGame()
 void AEveGameModeBase::LoseGame()
 {
     BP_LoseGame();
+}
+
+void AEveGameModeBase::PostLogin(APlayerController* NewPlayer)
+{
+    PlayerControllerList.AddUnique(NewPlayer);
+
+    Super::PostLogin(NewPlayer);
+    
+    int numPlayers = GetNumPlayers();
+
+    const FString& defaultPlayerName = FString::Format(s_DefaultPlayerNameFormat, { numPlayers });
+
+    ChangeName(NewPlayer, defaultPlayerName, true);
+
+}
+
+void AEveGameModeBase::ChangeName(AController* Controller, const FString& NewName, bool bNameChange)
+{
+    Super::ChangeName(Controller, NewName, bNameChange);
+
+    // Get player state.
 }
 
 void AEveGameModeBase::BeginPlay()

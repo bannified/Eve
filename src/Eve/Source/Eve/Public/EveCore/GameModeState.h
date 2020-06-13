@@ -11,7 +11,7 @@ class AEveGameModeBase;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, abstract)
 class EVE_API AGameModeState : public AInfo
 {
 	GENERATED_BODY()
