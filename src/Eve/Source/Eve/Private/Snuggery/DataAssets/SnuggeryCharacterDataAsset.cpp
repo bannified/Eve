@@ -13,3 +13,8 @@ void USnuggeryCharacterDataAsset::InitializeCharacter(ASnuggeryCharacterBase* ch
 
     K2_InitializeCharacter(character);
 }
+
+bool USnuggeryCharacterDataAsset::IsValid()
+{
+    return (SkeletalMesh != nullptr && DisplayName != "");
+}

@@ -4,10 +4,17 @@
 #include "EveCore/GameModeState.h"
 #include "EvePlayerController.h"
 #include "EveCharacter.h"
+#include "EveCore/EveGameStateBase.h"
+#include "Snuggery/SnuggeryPlayerState.h"
+
+const TCHAR* AEveGameModeBase::s_DefaultPlayerNameFormat = TEXT(R"(Player_{0})");
+
+const FString AEveGameModeBase::s_DefaultPlayerNameFormatString = FString(AEveGameModeBase::s_DefaultPlayerNameFormat);
 
 AEveGameModeBase::AEveGameModeBase()
 {
-
+    PrimaryActorTick.bStartWithTickEnabled = true;
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void AEveGameModeBase::MoveToState(AGameModeState* NextState)
@@ -41,6 +48,43 @@ void AEveGameModeBase::LoseGame()
     BP_LoseGame();
 }
 
+void AEveGameModeBase::PostLogin(APlayerController* NewPlayer)
+{
+    PlayerControllerList.AddUnique(NewPlayer);
+
+    Super::PostLogin(NewPlayer);
+    
+    int numPlayers = GetNumPlayers();
+
+    const FString& defaultPlayerName = FString::Format(s_DefaultPlayerNameFormat, { numPlayers });
+
+    ChangeName(NewPlayer, defaultPlayerName, true);
+
+    AEveGameStateBase* gameState = GetGameState<AEveGameStateBase>();
+    gameState->CurrentNumPlayers = numPlayers;
+}
+
+void AEveGameModeBase::ChangeName(AController* Controller, const FString& NewName, bool bNameChange)
+{
+    Super::ChangeName(Controller, NewName, bNameChange);
+
+    // Get player state.
+}
+
+void AEveGameModeBase::RegisterPlayerState(APlayerState* playerState)
+{
+    InitializedPlayerStates.Add(playerState);
+
+    OnPlayerFullyInitialized(playerState);
+}
+
+void AEveGameModeBase::OnPlayerFullyInitialized(APlayerState* playerState)
+{
+    ASnuggeryPlayerState* casted = Cast<ASnuggeryPlayerState>(playerState);
+    casted->OnFullyInitialized_Client();
+
+}
+
 void AEveGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
@@ -55,6 +99,20 @@ void AEveGameModeBase::Tick(float DeltaTime)
         CurrentState->OnStateTick(DeltaTime);
     }
 
+    AEveGameStateBase* gameState = GetGameState<AEveGameStateBase>();
+    if (gameState != nullptr)
+    {
+        gameState->CurrentTime += DeltaTime;
+    }
+}
+
+void AEveGameModeBase::ResetCurrentTime()
+{
+    AEveGameStateBase* gameState = GetGameState<AEveGameStateBase>();
+    if (gameState != nullptr)
+    {
+        gameState->CurrentTime = 0.0f;
+    }
 }
 
 void AEveGameModeBase::RegisterPlayer(APlayerController* playerController)

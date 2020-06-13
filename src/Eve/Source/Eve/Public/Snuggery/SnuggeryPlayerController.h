@@ -7,6 +7,7 @@
 #include "SnuggeryPlayerController.generated.h"
 
 class ASnuggeryCharacterBase;
+class APlayerState;
 
 /**
  *
@@ -51,5 +52,8 @@ protected:
     virtual void BeginPlay() override;
 public:
     virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
+
+    UFUNCTION(Server, Reliable, Category = "SnuggeryPlayerController")
+    virtual void RegisterPlayerState_Server();
 
 };
