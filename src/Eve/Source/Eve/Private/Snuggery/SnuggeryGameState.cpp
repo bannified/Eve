@@ -7,7 +7,6 @@
 #include "HAL/FileManager.h"
 #include "HAL/FileManagerGeneric.h"
 #include "UObject/ConstructorHelpers.h"
-#include "EditorAssetLibrary.h"
 #include "Engine/ObjectLibrary.h"
 
 void ASnuggeryGameState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const

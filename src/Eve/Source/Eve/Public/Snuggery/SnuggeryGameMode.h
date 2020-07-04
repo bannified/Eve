@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "EveCore/EveGameModeBase.h"
+#include "Snuggery/Gameplay/GameplayDelegates.h"
 #include "SnuggeryGameMode.generated.h"
 
 class ASnuggeryPlayerState;
@@ -35,6 +36,12 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "SnuggeryGameMode|Chat")
     bool IsValidEmoji(FString emojiString);
+
+    virtual void ChangeName(AController* Controller, const FString& NewName, bool bNameChange) override;
+
+protected:
+    UPROPERTY(BlueprintAssignable, Category = "RunGameMode")
+    FGameStartSignature OnGameStart;
 
 private:
     static const wchar_t* s_EmojiStringFormat;

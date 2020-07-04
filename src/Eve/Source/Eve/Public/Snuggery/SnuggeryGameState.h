@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameStateBase.h"
+#include "EveCore/EveGameStateBase.h"
+#include "Gameplay/GameplayDelegates.h"
 #include "SnuggeryGameState.generated.h"
 
 class USnuggeryCharacterDataAsset;
@@ -12,7 +13,7 @@ class USnuggeryCharacterDataAsset;
  * 
  */
 UCLASS()
-class EVE_API ASnuggeryGameState : public AGameStateBase
+class EVE_API ASnuggeryGameState : public AEveGameStateBase
 {
 	GENERATED_BODY()
 	

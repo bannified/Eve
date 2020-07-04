@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Snuggery/SnuggeryGameMode.h"
-#include "RunRunGameMode.generated.h"
+#include "Snuggery/SnuggeryCharacter.h"
+#include "RunSnuggeryCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class EVE_API ARunRunGameMode : public ASnuggeryGameMode
+class EVE_API ARunSnuggeryCharacter : public ASnuggeryCharacter
 {
 	GENERATED_BODY()
 	

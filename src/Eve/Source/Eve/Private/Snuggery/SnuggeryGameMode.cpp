@@ -9,6 +9,7 @@
 #include "UI/StringToStringRow.h"
 #include "Kismet/DataTableFunctionLibrary.h"
 #include "Eve/Eve.h"
+#include "GameFramework/Controller.h"
 
 const wchar_t* ASnuggeryGameMode::s_EmojiStringFormat = TEXT(R"(<img id="{0}"/>)");
 const TCHAR ASnuggeryGameMode::s_EmojiDelimiter = ':';
@@ -102,4 +103,17 @@ void ASnuggeryGameMode::BroadcastPlayerChatMessage(ASnuggeryPlayerState* senderS
 bool ASnuggeryGameMode::IsValidEmoji(FString emojiString)
 {
     return EmojiDataTable->GetRowMap().Contains(FName(*emojiString));
+}
+
+void ASnuggeryGameMode::ChangeName(AController* Controller, const FString& NewName, bool bNameChange)
+{
+    Super::ChangeName(Controller, NewName, bNameChange);
+
+    ASnuggeryPlayerState* playerState = Controller->GetPlayerState<ASnuggeryPlayerState>();
+
+    if (playerState)
+    {
+        playerState->OnNameChange_Multicast(NewName);
+    }
+
 }

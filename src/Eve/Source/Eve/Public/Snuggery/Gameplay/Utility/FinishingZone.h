@@ -24,6 +24,9 @@ public:
 	// Sets default values for this actor's properties
 	AFinishingZone();
 
+    UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "FinishingZone")
+    FPlayerEnterZoneSignature OnPlayerEnterZone;
+
 protected:
     UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "FinishingZone")
     UBoxComponent* BoxTrigger;
@@ -33,9 +36,6 @@ protected:
 
     UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "FinishingZone")
     FSimpleOverlapSignature OnBeginOverlapZone;
-
-    UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "FinishingZone")
-    FPlayerEnterZoneSignature OnPlayerEnterZone;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

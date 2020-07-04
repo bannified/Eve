@@ -4,6 +4,8 @@
 #include "Eve/Eve.h"
 #include "Snuggery/SnuggeryCharacterBase.h"
 #include "Net/UnrealNetwork.h"
+#include "EveCore/EveGameStateBase.h"
+#include "Kismet/GameplayStatics.h"
 
 void ASnuggeryPlayerController::OnTurn(float inScale)
 {
@@ -122,4 +124,12 @@ void ASnuggeryPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetim
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME(ASnuggeryPlayerController, SnuggeryCharacter);
+}
+
+void ASnuggeryPlayerController::RegisterPlayerState_Server_Implementation()
+{
+    UWorld* world = GetWorld();
+    AEveGameStateBase* gameState = Cast<AEveGameStateBase>(UGameplayStatics::GetGameState(world));
+
+    gameState->RegisterPlayerState_Server(GetPlayerState<APlayerState>());
 }

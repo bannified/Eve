@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "Snuggery/Gameplay/GameplayDelegates.h"
 #include "SnuggeryPlayerState.generated.h"
 
 /**
@@ -14,5 +15,20 @@ class EVE_API ASnuggeryPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 	
-    void OnNameChange_Multicast();
+public:
+    UPROPERTY(BlueprintAssignable, Category = "SnuggeryPlayerState")
+    FNameChangeSignature OnNameChange;
+
+    UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "SnuggeryPlayerState")
+    void OnNameChange_Multicast(const FString& newName);
+
+    UFUNCTION(Client, Reliable, Category = "SnuggeryPlayerState")
+    void StartGameCountdown_Client(float timeToStartGame);
+
+    UFUNCTION(Client, Reliable, Category = "SnuggeryPlayerState")
+    virtual void OnFullyInitialized_Client();
+
+protected:
+    virtual void BeginPlay() override;
+
 };
