@@ -24,7 +24,13 @@ public:
 	// Sets default values for this character's properties
 	ASnuggeryCharacterBase();
 
+    virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const override;
+
     virtual void OnPossessedByPlayerController(ASnuggeryPlayerController* playerController);
+
+    virtual void PossessedBy(AController* NewController) override;
+
+    virtual void OnRep_PlayerState() override;
 
 protected:
     /* Chat */

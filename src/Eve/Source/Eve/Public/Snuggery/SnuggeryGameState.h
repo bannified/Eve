@@ -22,6 +22,8 @@ public:
 
     ASnuggeryGameState();
 
+    FORCEINLINE const TArray<USnuggeryCharacterDataAsset*> GetCharacterDataList() const { return CharacterDataList; }
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SnuggeryGameState")
     TArray<USnuggeryCharacterDataAsset*> CharacterDataList;

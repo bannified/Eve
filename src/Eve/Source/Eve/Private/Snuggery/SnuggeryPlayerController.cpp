@@ -95,9 +95,9 @@ void ASnuggeryPlayerController::SetupInputComponent()
 
 void ASnuggeryPlayerController::OnPossess(APawn* aPawn)
 {
-    Super::OnPossess(aPawn);
-
     SnuggeryCharacter = Cast<ASnuggeryCharacterBase>(GetPawn());
+
+    Super::OnPossess(aPawn);
 
     if (SnuggeryCharacter == nullptr) {
         PRINT_ONSCREEN_WARN("SnuggeryPlayerController %s does not have a valid pawn %s.", *(this->GetName()), *(aPawn->GetName()));

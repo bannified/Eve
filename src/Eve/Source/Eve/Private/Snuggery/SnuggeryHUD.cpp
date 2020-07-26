@@ -11,18 +11,29 @@ void ASnuggeryHUD::BeginPlay()
 
     APlayerController* owningController = GetOwningPlayerController();
 
-    PlayerUIWidget = UUserWidget::CreateWidgetInstance(*owningController, PlayerUIClass, FName("PlayerUI"));
-    PlayerUIWidget->AddToPlayerScreen(300);
-
     CharacterSelectionWidget = UUserWidget::CreateWidgetInstance(*owningController, CharacterSelectionClass, FName("CharacterSelection"));
     CharacterSelectionWidget->AddToPlayerScreen(400);
     CharacterSelectionWidget->SetVisibility(ESlateVisibility::Hidden);
+
+    if (PlayerUIWidget == nullptr)
+    {
+        PlayerUIWidget = CreateWidget<USnuggeryPlayerUI>(owningController, PlayerUIClass, FName("PlayerUI"));
+        PlayerUIWidget->AddToPlayerScreen(300);
+    }
 
 }
 
 void ASnuggeryHUD::OnPlayerStateInitialized()
 {
+    if (PlayerUIWidget == nullptr)
+    {
+        APlayerController* owningController = GetOwningPlayerController();
 
+        PlayerUIWidget = CreateWidget<USnuggeryPlayerUI>(owningController, PlayerUIClass, FName("PlayerUI"));
+        PlayerUIWidget->AddToPlayerScreen(300);
+    }
+
+    PlayerUIWidget->OnPlayerStateInitialized();
 }
 
 void ASnuggeryHUD::StartGameStartCountdown(float timeToStartGame)

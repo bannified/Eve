@@ -14,6 +14,9 @@
 #include "Engine/Engine.h"
 #include "Snuggery/SnuggeryPetCharacter.h"
 #include "Eve/Eve.h"
+#include "UI/Widgets/PlayerLabelWidget.h"
+#include "Snuggery/SnuggeryHUD.h"
+#include "UI/Widgets/ChatBubbleWidget.h"
 
 // Sets default values
 ASnuggeryCharacter::ASnuggeryCharacter() : ASnuggeryCharacterBase()
@@ -25,6 +28,8 @@ ASnuggeryCharacter::ASnuggeryCharacter() : ASnuggeryCharacterBase()
 
     CameraMode = ESnuggeryCharacterCameraMode::PlayerPivot;
     SetupCameraMode(CameraMode);
+
+    ChatMessageRevealDuration = 5.0f;
 }
 
 void ASnuggeryCharacter::OnMoveRight(float inScale)
@@ -178,6 +183,23 @@ void ASnuggeryCharacter::PlaySpawnEffect()
     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnParticleSystem, location, FRotator::ZeroRotator, SpawnParticleScale);
 }
 
+void ASnuggeryCharacter::SetupPlayerNameLabel()
+{
+    if (NameLabelWidgetComponent->GetUserWidgetObject() == nullptr)
+    {
+        NameLabelWidgetComponent->InitWidget();
+    }
+
+    UPlayerLabelWidget* labelWidget = Cast<UPlayerLabelWidget>(NameLabelWidgetComponent->GetUserWidgetObject());
+
+    labelWidget->SetupWithPlayer(this);
+}
+
+void ASnuggeryCharacter::ChangeName_Server_Implementation(const FString& newName)
+{
+    UGameplayStatics::GetGameMode(GetWorld())->ChangeName(GetController(), newName, false);
+}
+
 void ASnuggeryCharacter::SwitchCharacter_Server(USnuggeryCharacterDataAsset* characterData)
 {
     Super::SwitchCharacter_Server(characterData);
@@ -198,6 +220,22 @@ void ASnuggeryCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
     }
 }
 
+void ASnuggeryCharacter::PossessedBy(AController* NewController)
+{
+    Super::PossessedBy(NewController);
+    
+    // For Server/ListenServer
+    SetupPlayerNameLabel();
+}
+
+void ASnuggeryCharacter::OnRep_PlayerState()
+{
+    Super::OnRep_PlayerState();
+
+    // For Clients
+    SetupPlayerNameLabel();
+}
+
 void ASnuggeryCharacter::SendMessage_Implementation(const FString& message)
 {
     AGameModeBase* gameMode = UGameplayStatics::GetGameMode(GetWorld());
@@ -210,6 +248,21 @@ void ASnuggeryCharacter::SendMessage_Implementation(const FString& message)
 
 void ASnuggeryCharacter::ReceiveMessage_Implementation(ASnuggeryPlayerState* sender, const FString& message)
 {
+    AHUD* hud = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD();
+    ASnuggeryHUD* snuggeryHud = Cast<ASnuggeryHUD>(hud);
+
+    if (snuggeryHud != nullptr)
+    {
+        snuggeryHud->GetChatboxWidget()->AddMessageToChatHistoryBox(sender->GetPlayerName(), message);
+    }
+
+    FString formatted = FString::Printf(TEXT("%s: %s"), *sender->GetPlayerName(), *message);
+
+    ASnuggeryCharacter* senderCharacter = sender->GetPawn<ASnuggeryCharacter>();
+
+    UChatBubbleWidget* chatBubble = Cast<UChatBubbleWidget>(senderCharacter->ChatBubbleWidgetComponent->GetUserWidgetObject());
+    chatBubble->ShowWithMessage(formatted, ChatMessageRevealDuration);
+
     OnMessageReceived(sender, message);
 }
 

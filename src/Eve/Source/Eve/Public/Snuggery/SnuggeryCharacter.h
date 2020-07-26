@@ -34,6 +34,8 @@ public:
 
     virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 
+    virtual void PossessedBy(AController* NewController) override;
+
 protected:
     /* Camera */
     UPROPERTY(EditAnywhere, Category = "SnuggeryCharacter|Camera")
@@ -79,15 +81,25 @@ public:
     UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter|Camera")
     void SetupCameraMode(TEnumAsByte<ESnuggeryCharacterCameraMode> mode);
 
+    UFUNCTION(BlueprintCallable, Category = "SnuggeryCharacter|Getters")
+    FORCEINLINE UCameraComponent* GetCameraComponent() { return CameraComponent; }
+
     /* Chat Feature */
-protected:
+public:
 
     //void SetChatAvatarImage(const )
+
+    float ChatMessageRevealDuration;
 
     virtual void PlaySpawnEffect() override;
 
     UFUNCTION(BlueprintCallable, Server, Reliable, Category = "SnuggeryCharacter|Chat")
     void SendMessage(const FString& message);
+
+    void SetupPlayerNameLabel();
+
+    UFUNCTION(BlueprintCallable, Server, Reliable, Category = "SnuggeryCharacter|Chat")
+    void ChangeName_Server(const FString& newName);
 
 public:
     UFUNCTION(BlueprintCallable, Client, Reliable, Category = "SnuggeryCharacter|Chat")
@@ -101,7 +113,7 @@ public:
 
     virtual void SwitchCharacter_Multicast(USnuggeryCharacterDataAsset* characterData) override;
 
-    /* ACharacter overrides */
+    /* APawn overrides */
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -109,5 +121,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+    virtual void OnRep_PlayerState() override;
 
 };

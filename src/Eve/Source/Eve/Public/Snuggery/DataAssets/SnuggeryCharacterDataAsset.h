@@ -19,7 +19,7 @@ class EVE_API USnuggeryCharacterDataAsset : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
-protected:
+public:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Customization")
     FName DisplayName;
 

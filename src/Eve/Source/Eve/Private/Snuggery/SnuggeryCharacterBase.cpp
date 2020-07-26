@@ -9,6 +9,8 @@
 #include "Components/WidgetComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Snuggery/DataAssets/SnuggeryCharacterDataAsset.h"
+#include "Net/UnrealNetwork.h"
+#include "Eve/Eve.h"
 
 // Sets default values
 ASnuggeryCharacterBase::ASnuggeryCharacterBase()
@@ -53,16 +55,38 @@ ASnuggeryCharacterBase::ASnuggeryCharacterBase()
     ChatBubbleWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 }
 
+void ASnuggeryCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> & OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+}
+
 void ASnuggeryCharacterBase::OnPossessedByPlayerController(ASnuggeryPlayerController* playerController)
 {
+
+}
+
+void ASnuggeryCharacterBase::PossessedBy(AController* NewController)
+{
+    Super::PossessedBy(NewController);
+
+}
+
+void ASnuggeryCharacterBase::OnRep_PlayerState()
+{
+    Super::OnRep_PlayerState();
 
 }
 
 // Called when the game starts or when spawned
 void ASnuggeryCharacterBase::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
+
+    if (Role == ENetRole::ROLE_Authority)
+    {
+
+    }
 }
 
 void ASnuggeryCharacterBase::OnMoveRight(float inScale)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "UI/Widgets/SnuggeryPlayerUI.h"
 #include "SnuggeryHUD.generated.h"
 
 class UUserWidget;
@@ -21,10 +22,10 @@ protected:
 
     // Todo: Add in WBP_SnuggeryPlayer and WBP_CharacterSelection
     UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "SnuggeryHUD")
-    TSubclassOf<UUserWidget> PlayerUIClass;
+    TSubclassOf<USnuggeryPlayerUI> PlayerUIClass;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "SnuggeryHUD")
-    UUserWidget* PlayerUIWidget;
+    USnuggeryPlayerUI* PlayerUIWidget;
 
     UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "SnuggeryHUD")
     TSubclassOf<UUserWidget> CharacterSelectionClass;
@@ -37,4 +38,6 @@ public:
     virtual void StartGameStartCountdown(float timeToStartGame);
 
     virtual void OnPlayerStateInitialized();
+
+    FORCEINLINE UChatboxWidget* GetChatboxWidget() { return PlayerUIWidget->GetChatboxWidget(); }
 };
